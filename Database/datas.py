@@ -50,3 +50,40 @@ def get_team_id(team_name: str):
     result = [{key: val for key, val in row.items()} for row in datas]
     conn.close()
     return result
+
+
+def get_user_time(user_id: int):
+    conn = connection()
+    cur = conn.cursor(cursor_factory=extras.DictCursor)
+    cur.execute("SELECT time FROM users WHERE user_chat_id = %s", (user_id,))
+    datas = cur.fetchone()
+    if datas:
+        result = {key: val for key, val in datas.items()}
+    else:
+        return "Not Found"
+    conn.close()
+    time = result['time']
+    return time
+
+
+def get_user_chat_id(user_id: int):
+    conn = connection()
+    cur = conn.cursor(cursor_factory=extras.DictCursor)
+    cur.execute("select user_chat_id from users where id = %s", (user_id,))
+    datas = cur.fetchone()
+    if datas:
+        result = {key: val for key, val in datas.items()}
+    else:
+        return "Not Found"
+    conn.close()
+    return result['user_chat_id']
+
+
+def get_all_user_chat_ids():
+    conn = connection()
+    cur = conn.cursor(cursor_factory=extras.DictCursor)
+    cur.execute('select user_chat_id from users')
+    datas = cur.fetchall()
+    result = [{key: val for key, val in row.items()} for row in datas]
+    conn.close()
+    return result

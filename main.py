@@ -7,6 +7,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 from dotenv import load_dotenv
 from aiogram.fsm.context import FSMContext
+# from tasks import schedule_message_to_user
 
 from Database.checking import is_user_authenticated, insert_user
 from Database.datas import get_branch_data, get_team_id
@@ -107,6 +108,9 @@ async def confirm(message: Message, state: FSMContext):
     insert_user(finally_data)
     await message.delete()
     await message.answer('Hurmatli mijoz yangiliklarni kuzatib turing')
+
+
+# schedule_message_to_user.apply()
 
 
 async def main():

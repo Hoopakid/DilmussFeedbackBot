@@ -6,3 +6,7 @@ class UserState(StatesGroup):
     branch = State()
     time = State()
     team = State()
+
+
+class QuestionsState(StatesGroup):
+    work = State()
