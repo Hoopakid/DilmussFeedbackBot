@@ -19,8 +19,8 @@ def insert_user(user_data: dict):
     cursor = conn.cursor(cursor_factory=extras.DictCursor)
     try:
         insert_query = """
-                    VALUES (%s, %s, %s, %s, %s)
                     INSERT INTO users (name, branch_id, time, team_id, user_chat_id)
+                    VALUES (%s, %s, %s, %s, %s)
                 """
         cursor.execute(insert_query, (
             user_data.get('name'),
@@ -34,3 +34,18 @@ def insert_user(user_data: dict):
         print(f'Error inserting user data {e}')
     finally:
         conn.close()
+
+
+def insert_data_to_base(data: dict):
+    conn = connection()
+    cursor = conn.cursor(cursor_factory=extras.DictCursor)
+    filtered_data = {k: v for k, v in data.items() if v is not None}
+
+    columns = ', '.join(filtered_data.keys())
+    values = tuple(filtered_data.values())
+    placeholders = ', '.join(['%s'] * len(filtered_data))
+
+    query = f"INSERT INTO user_statistics ({columns}) VALUES ({placeholders})"
+    cursor.execute(query, values)
+    conn.commit()
+    conn.close()

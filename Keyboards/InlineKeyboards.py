@@ -22,3 +22,9 @@ def assessment_work_day():
     finally_btn_data = InlineKeyboardMarkup(
         inline_keyboard=[[one, two, three], [four, five, six], [seven, eight, nine], [ten]])
     return finally_btn_data
+
+
+def start_questions():
+    start = InlineKeyboardButton(text='Boshlaymiz', callback_data='start')
+    finally_btn_data = InlineKeyboardMarkup(inline_keyboard=[[start]])
+    return finally_btn_data

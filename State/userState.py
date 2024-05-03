@@ -10,3 +10,11 @@ class UserState(StatesGroup):
 
 class QuestionsState(StatesGroup):
     work = State()
+    problems = State()
+    problem_another_work = State()
+    razmer = State()
+    razmer_size = State()
+    other_size = State()
+    kelmagan_ishchilar = State()
+    mark_team = State()
+    other_work = State()

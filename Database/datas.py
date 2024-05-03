@@ -52,10 +52,10 @@ def get_team_id(team_name: str):
     return result
 
 
-def get_user_time(user_id: int):
+def get_user_time(user_chat_id: int):
     conn = connection()
     cur = conn.cursor(cursor_factory=extras.DictCursor)
-    cur.execute("SELECT time FROM users WHERE user_chat_id = %s", (user_id,))
+    cur.execute("SELECT time FROM users WHERE user_chat_id = %s", (user_chat_id,))
     datas = cur.fetchone()
     if datas:
         result = {key: val for key, val in datas.items()}
@@ -87,3 +87,15 @@ def get_all_user_chat_ids():
     result = [{key: val for key, val in row.items()} for row in datas]
     conn.close()
     return result
+
+
+def get_user_name(user_chat_id):
+    conn = connection()
+    cur = conn.cursor(cursor_factory=extras.DictCursor)
+    cur.execute("select name from users where user_chat_id = %s", (user_chat_id,))
+    datas = cur.fetchone()
+    try:
+        result = {key: val for key, val in datas.items()}
+    except Exception as e:
+        return e
+    return result['name']
