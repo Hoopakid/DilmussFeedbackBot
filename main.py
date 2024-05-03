@@ -272,12 +272,12 @@ async def set_other_work(message: Message, state: FSMContext):
 
     await message.answer(f"Bugungi Hisobot ni topshirganingiz uchun rahmat, {user_name}.")
 
-    # url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
-    # payload = {
-    #     'chat_id': ADMIN_CHAT_ID,
-    #     'text': returning_message
-    # }
-    # requests.post(url, json=payload)
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
+    payload = {
+        'chat_id': ADMIN_CHAT_ID,
+        'text': returning_message
+    }
+    requests.post(url, json=payload)
 
     return True
 
