@@ -91,11 +91,17 @@ def get_all_user_chat_ids():
 
 def get_user_name(user_chat_id):
     conn = connection()
-    cur = conn.cursor(cursor_factory=extras.DictCursor)
-    cur.execute("select name from users where user_chat_id = %s", (user_chat_id,))
-    datas = cur.fetchone()
+    cur = conn.cursor()
     try:
-        result = {key: val for key, val in datas.items()}
+        cur.execute("SELECT name FROM users WHERE user_chat_id = %s", (user_chat_id,))
+        data = cur.fetchone()
+        if data is not None:
+            return data[0]
+        else:
+            return "Unknown User"
     except Exception as e:
-        return e
-    return result['name']
+        print(f"Error retrieving user name: {e}")
+        return "Unknown User"
+    finally:
+        cur.close()
+        conn.close()

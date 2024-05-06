@@ -4,9 +4,9 @@ from Database.datas import get_branch_datas, get_team_data
 
 
 def choose_time_btn():
-    kechki = KeyboardButton(text='Kechki 🌃')
     kunduzgi = KeyboardButton(text='Kunduzgi 🏙')
-    finally_btn = ReplyKeyboardMarkup(keyboard=[[kechki], [kunduzgi]], resize_keyboard=True, one_time_keyboard=True)
+    kechki = KeyboardButton(text='Kechki 🌃')
+    finally_btn = ReplyKeyboardMarkup(keyboard=[[kunduzgi], [kechki]], resize_keyboard=True, one_time_keyboard=True)
     return finally_btn
 
 

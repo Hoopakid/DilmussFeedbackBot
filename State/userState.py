@@ -18,3 +18,4 @@ class QuestionsState(StatesGroup):
     kelmagan_ishchilar = State()
     mark_team = State()
     other_work = State()
+    status = State()

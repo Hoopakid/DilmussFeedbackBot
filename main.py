@@ -2,6 +2,7 @@ import asyncio
 import os
 import requests
 import logging
+from datetime import datetime
 
 from aiogram import Bot
 from aiogram.filters import CommandStart
@@ -11,6 +12,7 @@ from aiogram.fsm.context import FSMContext
 
 from Database.checking import is_user_authenticated, insert_user, insert_data_to_base
 from Database.datas import get_branch_data, get_team_id, get_user_name
+from Keyboards.InlineKeyboards import yes_not_problem
 from Keyboards.ReplyKeyboards import choose_time_btn, branch_btn, choose_team_btn, \
     assessment_for_user, problems_for_user, problem_other, problem_size, sizes_of_pants, size_of_dresses, kofta_sizes, \
     kelmagan_ishchilar
@@ -108,8 +110,7 @@ async def confirm(message: Message, state: FSMContext):
         user_chat_id=message.from_user.id,
     )
     insert_user(finally_data)
-    await message.delete()
-    await message.answer('Hurmatli mijoz yangiliklarni kuzatib turing')
+    await message.answer("Ro'yhatdan o'tish muvaffaqiyatli yakunlandi. Botdagi yangiliklarni kuzatib turing.")
 
 
 @dp.callback_query(lambda callback_query: callback_query.data == 'start')
@@ -123,7 +124,8 @@ async def start_questions(callback_query: CallbackQuery, state: FSMContext):
 @dp.message(QuestionsState.work)
 async def get_mark_for_day_from_user(message: Message, state: FSMContext):
     await state.update_data({
-        'work': message.text
+        'work': message.text,
+        'status': 'False'
     })
     await message.answer('Ish kunidagi muammolar', reply_markup=problems_for_user())
     await state.set_state(QuestionsState.problems)
@@ -160,11 +162,16 @@ async def set_problem_another_work(message: Message, state: FSMContext):
     if message.text == 'Ortga':
         await message.answer("Ortga", reply_markup=problems_for_user())
         await state.set_state(QuestionsState.problems)
-    await state.update_data({
-        "problem_another_work": message.text
-    })
-    await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
-    await state.set_state(QuestionsState.mark_team)
+    else:
+        await state.update_data({
+            "problem_another_work": message.text
+        })
+        data = await state.get_data()
+        if data['status'] == 'False':
+            await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
+            await state.set_state(QuestionsState.mark_team)
+        else:
+            await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
 @dp.message(QuestionsState.razmer)
@@ -204,11 +211,16 @@ async def set_razmer_size(message: Message, state: FSMContext):
     if message.text == 'Boshqa':
         await message.answer('Boshqa razmer kiriting')
         await state.set_state(QuestionsState.other_size)
-    await state.update_data({
-        "razmer_size": message.text
-    })
-    await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
-    await state.set_state(QuestionsState.mark_team)
+    else:
+        await state.update_data({
+            "razmer_size": message.text
+        })
+        data = await state.get_data()
+        if data['status'] == 'False':
+            await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
+            await state.set_state(QuestionsState.mark_team)
+        else:
+            await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
 @dp.message(QuestionsState.other_size)
@@ -216,8 +228,12 @@ async def set_other_size(message: Message, state: FSMContext):
     await state.update_data({
         "other_size": message.text
     })
-    await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
-    await state.set_state(QuestionsState.mark_team)
+    data = await state.get_data()
+    if data['status'] == 'False':
+        await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
+        await state.set_state(QuestionsState.mark_team)
+    else:
+        await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
 @dp.message(QuestionsState.kelmagan_ishchilar)
@@ -225,8 +241,12 @@ async def set_kelmagan_ishchilar(message: Message, state: FSMContext):
     await state.update_data({
         "kelmagan_ishchilar": message.text
     })
-    await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
-    await state.set_state(QuestionsState.mark_team)
+    data = await state.get_data()
+    if data['status'] == 'False':
+        await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
+        await state.set_state(QuestionsState.mark_team)
+    else:
+        await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
 @dp.message(QuestionsState.mark_team)
@@ -234,22 +254,43 @@ async def mark_team(message: Message, state: FSMContext):
     if message.text == 'Ortga':
         await message.answer("Ortga", reply_markup=problems_for_user())
         await state.set_state(QuestionsState.problems)
-    await state.update_data({
-        "mark_team": message.text
-    })
-    await message.answer("Bugun agar nima bo'lganda bundanda yaxshiroq ishlay olar edingiz?")
-    await state.set_state(QuestionsState.other_work)
+    else:
+        await state.update_data({
+            "mark_team": message.text
+        })
+        data = await state.get_data()
+        if data['status'] == 'False':
+            await message.answer("Bugun agar nima bo'lganda bundanda yaxshiroq ishlay olar edingiz?")
+            await state.set_state(QuestionsState.other_work)
+        else:
+            await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
 @dp.message(QuestionsState.other_work)
 async def set_other_work(message: Message, state: FSMContext):
     await state.update_data({"other_work": message.text})
+
+    await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
+
+
+@dp.callback_query(lambda callback_data: callback_data.data == 'yes')
+async def set_problem(callback_data: CallbackQuery, state: FSMContext):
+    await callback_data.message.delete()
+    await state.update_data({
+        'status': 'True'
+    })
+    await callback_data.message.answer("Bor", reply_markup=problems_for_user())
+    await state.set_state(QuestionsState.problems)
+
+
+@dp.callback_query(lambda callback_data: callback_data.data == "no")
+async def get_all_data(callback_data: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     finally_data = {}
 
-    user_chat_id = message.from_user.id
+    user_chat_id = callback_data.message.from_user.id
     user_name = get_user_name(user_chat_id)
-    returning_message = f"{user_name}, Hisobot:\n"
+    returning_message = f"{user_name}ning {datetime.today().date()} kungi hisoboti:\n"
 
     fields = {
         'work': 'Bugungi ish baholandi',
@@ -270,7 +311,7 @@ async def set_other_work(message: Message, state: FSMContext):
     finally_data['user_chat_id'] = user_chat_id
     insert_data_to_base(finally_data)
 
-    await message.answer(f"Bugungi Hisobot ni topshirganingiz uchun rahmat, {user_name}.")
+    await callback_data.message.answer(f"Bugungi Hisobot ni topshirganingiz uchun rahmat, {user_name}.")
 
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
     payload = {

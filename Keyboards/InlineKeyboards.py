@@ -28,3 +28,10 @@ def start_questions():
     start = InlineKeyboardButton(text='Boshlaymiz', callback_data='start')
     finally_btn_data = InlineKeyboardMarkup(inline_keyboard=[[start]])
     return finally_btn_data
+
+
+def yes_not_problem():
+    yes = InlineKeyboardButton(text='Bor', callback_data='yes')
+    no = InlineKeyboardButton(text='Yo\'q', callback_data='no')
+    finally_btn_data = InlineKeyboardMarkup(inline_keyboard=[[yes, no]])
+    return finally_btn_data
