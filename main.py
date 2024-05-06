@@ -170,7 +170,7 @@ async def set_problem_another_work(message: Message, state: FSMContext):
         if data['status'] == 'False':
             await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
             await state.set_state(QuestionsState.mark_team)
-        else:
+        elif data['status'] == 'True':
             await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
@@ -219,7 +219,7 @@ async def set_razmer_size(message: Message, state: FSMContext):
         if data['status'] == 'False':
             await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
             await state.set_state(QuestionsState.mark_team)
-        else:
+        elif data['status'] == 'True':
             await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
@@ -232,7 +232,7 @@ async def set_other_size(message: Message, state: FSMContext):
     if data['status'] == 'False':
         await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
         await state.set_state(QuestionsState.mark_team)
-    else:
+    elif data['status'] == 'True':
         await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
@@ -245,7 +245,7 @@ async def set_kelmagan_ishchilar(message: Message, state: FSMContext):
     if data['status'] == 'False':
         await message.answer("Jamoaning bugungi ishi uchun bahoyingiz", reply_markup=kelmagan_ishchilar())
         await state.set_state(QuestionsState.mark_team)
-    else:
+    elif data['status'] == 'True':
         await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
@@ -262,7 +262,7 @@ async def mark_team(message: Message, state: FSMContext):
         if data['status'] == 'False':
             await message.answer("Bugun agar nima bo'lganda bundanda yaxshiroq ishlay olar edingiz?")
             await state.set_state(QuestionsState.other_work)
-        else:
+        elif data['status'] == 'True':
             await message.answer('Yana muammoyingiz bormi? ', reply_markup=yes_not_problem())
 
 
@@ -288,7 +288,7 @@ async def get_all_data(callback_data: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     finally_data = {}
 
-    user_chat_id = callback_data.message.from_user.id
+    user_chat_id = callback_data.message.chat.id
     user_name = get_user_name(user_chat_id)
     returning_message = f"{user_name}ning {datetime.today().date()} kungi hisoboti:\n"
 
