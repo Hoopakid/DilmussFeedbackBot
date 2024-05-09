@@ -19,7 +19,7 @@
         - CELERY_BROKER_URL=redis://redis:6379/0
         - CELERY_RESULT_BACKEND=redis://redis:6379/0
       depends_on:
-        - redis
+        - redis_data
 
     celery_beat:
       build:
@@ -30,8 +30,8 @@
         - CELERY_BROKER_URL=redis://redis:6379/0
         - CELERY_RESULT_BACKEND=redis://redis:6379/0
       depends_on:
-        - redis
+        - redis_data
 
-    redis:
-      container_name: redis
+    redis_data:
+      container_name: redis_data
       image: redis:latest
