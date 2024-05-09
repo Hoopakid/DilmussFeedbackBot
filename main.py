@@ -290,7 +290,7 @@ async def get_all_data(callback_data: CallbackQuery, state: FSMContext):
 
     user_chat_id = callback_data.message.chat.id
     user_name = get_user_name(user_chat_id)
-    returning_message = f"{user_name}ning {datetime.today().date()} kungi hisoboti:\n"
+    returning_message = f"👤 {user_name}ning {datetime.today().date()} kungi hisoboti:\n"
 
     fields = {
         'work': 'Bugungi ish baholandi',
