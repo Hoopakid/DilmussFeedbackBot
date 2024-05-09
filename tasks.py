@@ -9,8 +9,8 @@ from main import bot
 
 app = Celery(
     'tasks',
-    broker='redis://redis:6379/0',
-    backend='redis://redis:6379/0'
+    broker='redis://redis_data:6379/0',
+    backend='redis://redis_data:6379/0'
 )
 
 app.conf.beat_schedule = {
