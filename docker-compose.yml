@@ -7,21 +7,21 @@
         dockerfile: Dockerfile
       command: python main.py
       depends_on:
-        - celery_worker
-        - celery_beat
+        - celery_worker_dilmuss
+        - celery_beat_dilmuss
 
-    celery_worker:
+    celery_worker_dilmuss:
       build:
         context: .
         dockerfile: Dockerfile
       command: celery -A tasks worker --loglevel=INFO
       environment:
-        - CELERY_BROKER_URL=redis://redis:6379/0
-        - CELERY_RESULT_BACKEND=redis://redis:6379/0
+        - CELERY_BROKER_URL=redis://redis_data:6379/0
+        - CELERY_RESULT_BACKEND=redis://redis_data:6379/0
       depends_on:
         - redis_data
 
-    celery_beat:
+    celery_beat_dilmuss:
       build:
         context: .
         dockerfile: Dockerfile
