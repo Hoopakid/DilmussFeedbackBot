@@ -285,6 +285,7 @@ async def set_problem(callback_data: CallbackQuery, state: FSMContext):
 
 @dp.callback_query(lambda callback_data: callback_data.data == "no")
 async def get_all_data(callback_data: CallbackQuery, state: FSMContext):
+    await callback_data.message.delete()
     data = await state.get_data()
     finally_data = {}
 
