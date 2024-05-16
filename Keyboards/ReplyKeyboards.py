@@ -67,7 +67,8 @@ def problem_other():
     security = KeyboardButton(text="Xavfsizlik xodimi bilan")
     to_street = KeyboardButton(text="Ko'chaga aksiyaga")
     back = KeyboardButton(text="Ortga")
-    finally_btn = ReplyKeyboardMarkup(keyboard=[[razdevalka], [open_product], [security], [to_street], [back]])
+    finally_btn = ReplyKeyboardMarkup(keyboard=[[razdevalka], [open_product], [security], [to_street], [back]],
+                                      one_time_keyboard=True)
     return finally_btn
 
 

@@ -11,9 +11,7 @@ services:
       - celery_beat_dilmuss
 
   celery_worker_dilmuss:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     command: celery -A tasks worker --loglevel=INFO
     environment:
       - CELERY_BROKER_URL=redis://redis_dilmuss:6379/0
@@ -22,9 +20,7 @@ services:
       - redis_dilmuss
 
   celery_beat_dilmuss:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     command: celery -A tasks beat --loglevel=INFO
     environment:
       - CELERY_BROKER_URL=redis://redis_dilmuss:6379/0
