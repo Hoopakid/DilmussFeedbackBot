@@ -32,6 +32,10 @@ bot = Bot(BOT_TOKEN)
 
 @dp.message(CommandStart())
 async def start_bot(message: Message, state: FSMContext):
+    if message.chat.type != 'private':
+        await message.answer("Ushbu bot faqat shaxsiy suhbatlarda ishlaydi ‼️")
+        return
+
     first_name, last_name = '', ''
     if message.chat.first_name is not None:
         first_name = message.chat.first_name
@@ -115,9 +119,14 @@ async def confirm(message: Message, state: FSMContext):
 
 @dp.callback_query(lambda callback_query: callback_query.data == 'start')
 async def start_questions(callback_query: CallbackQuery, state: FSMContext):
-    await callback_query.message.delete()
-    await callback_query.message.answer('Ish kunini baholang (1 - 10)', reply_markup=assessment_for_user())
-    await state.set_state(QuestionsState.work)
+    user_chat_id = callback_query.message.chat.id
+    if is_user_authenticated(user_chat_id) is True:
+        await callback_query.message.delete()
+        await callback_query.message.answer('Ish kunini baholang (1 - 10)', reply_markup=assessment_for_user())
+        await state.set_state(QuestionsState.work)
+    else:
+        await callback_query.message.delete()
+        await callback_query.message.answer("Ro'yhatdan o'tishda kamchilik bo'lgan bo'lishi mumkin ")
 
 
 # second part
