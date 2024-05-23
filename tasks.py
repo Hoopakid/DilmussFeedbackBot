@@ -34,7 +34,7 @@ app.conf.timezone = 'UTC'
 async def send_message_if_needed(user_chat_id, expected_user_time):
     try:
         user_time = get_user_time(user_chat_id['user_chat_id'])
-        if user_time == expected_user_time:
+        if int(user_time) == int(expected_user_time):
             await bot.send_message(user_chat_id['user_chat_id'], 'Ish kunini baholashni boshlaymizmi 😉',
                                    reply_markup=start_questions())
     except AiogramError as e:

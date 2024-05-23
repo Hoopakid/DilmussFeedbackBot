@@ -9,45 +9,23 @@ services:
     depends_on:
       - celery_worker_dilmuss
       - celery_beat_dilmuss
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
 
   celery_worker_dilmuss:
     build: .
     command: celery -A tasks worker --loglevel=INFO
-    environment:
-      - CELERY_BROKER_URL=redis://redis_dilmuss:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis_dilmuss:6379/0
+    volumes:
+      - .:/app
     depends_on:
       - redis_dilmuss
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
 
   celery_beat_dilmuss:
     build: .
     command: celery -A tasks beat --loglevel=INFO
-    environment:
-      - CELERY_BROKER_URL=redis://redis_dilmuss:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis_dilmuss:6379/0
+    volumes:
+      - .:/app
     depends_on:
       - redis_dilmuss
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256M
 
   redis_dilmuss:
     container_name: redis_dilmuss
     image: redis:latest
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256M
