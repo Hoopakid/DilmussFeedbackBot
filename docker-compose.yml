@@ -5,14 +5,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: timeout 300 python main.py
+    command: python main.py
     depends_on:
       - celery_worker_dilmuss
       - celery_beat_dilmuss
 
   celery_worker_dilmuss:
     build: .
-    command: timeout 300 celery -A tasks worker --loglevel=INFO
+    command: celery -A tasks worker --loglevel=INFO
     volumes:
       - .:/app
     depends_on:
@@ -20,7 +20,7 @@ services:
 
   celery_beat_dilmuss:
     build: .
-    command: timeout 300 celery -A tasks beat --loglevel=INFO
+    command: celery -A tasks beat --loglevel=INFO
     volumes:
       - .:/app
     depends_on:
